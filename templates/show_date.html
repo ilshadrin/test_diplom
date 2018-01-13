@@ -75,27 +75,50 @@
   <p>sh ip int br</p>
   <p> sh clo</p>
   <p>sh ver</p>
+ <p><a class="btn btn-lg  btn-primary btn-block" href=# id="sh_clo">sh clo</a>
 
-<!-- <h1>Введенные IP Login Password </h1> -->
 
-  <div class="container">
-
-  <p>{{ip_adress}}</p>
-  <p>{{login}}</p>
-  <p>{{password}}</p>
-  
-  </div> <!-- /container -->
 
 
 <h1>Ввод команды </h1>
 <p><input type="text" size="20" name="command"> 
-<p><a href=# id="input_command">показать</a>
+<p><a class="btn btn-lg  btn-primary btn-block" href=# id="input_command">показать</a>
 
 
 <h1>Вывод результата</h1>
 <p><span id="result_command_web">тут будет результат</span>
 
 
+
+<!-- Button trigger modal -->
+<div class="bs-example bs-example-padded-bottom"> 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> 
+    Диагностика
+</button> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+
+     <div class="modal-body">
+    <h4>Text in a modal</h4>
+    <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+
+
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -120,27 +143,40 @@
 </script>
 
 
-
-
-
-<!-- вводим команду -->
+<!-- command_run-->
 
 <script type=text/javascript>
   $(function() {
-    $('a#input_command').bind('click', function() {
-      $.getJSON($SCRIPT_ROOT + '/command', {
-        command: $('input[name="command"]').val(),
+    $('.router-command').bind('click', function() {
+      console.log($(this).attr('data-command'));
+      $.getJSON($SCRIPT_ROOT + '/command_run', {
+        command_run: $(this).attr('data-command'),
         ip_adress: $('input[name="ip_adress"]').val(),
         login: $('input[name="login"]').val(),
         password: $('input[name="password"]').val(),
       
       }, function(data) {
-        $("#result_command_web").text(data.result_command);
+        $("#command_run_web").text(data.result_command_run);
       });
       return false;
     });
   });
 </script>
+
+<h1>Ввод команды command_run</h1>
+<p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh clo' href=# id="sh clo">Ввод команды sh_clo_web</a>
+<p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip int br' href=# id="sh ip int br">Ввод команды sh ip int br</a>
+<p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip route' href=# id="sh ip int br">Ввод команды sh ip route</a>
+<p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh run' href=# id="sh ip int br">Ввод команды sh run</a>
+<p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh arp' href=# id="sh ip int br">Ввод команды sh arp</a>
+
+
+<h1>Вывод результата command_run</h1>
+
+<p><pre id="command_run_web">Вывод результата command_run</pre>
+
+
+
 
 
 <!-- активация скриптов в bootstrap -->

@@ -56,18 +56,12 @@ def correct():
 
 #ВВОД КОМАНДЫ ДЛЯ МАРШРУТИЗАТОРА
 @my_flask_app .route('/command')
-def add_numbers():
+def command():
 
     command = request.args.get('command', 0, type=str).encode('utf-8')
-    #COMMAND=a.encode('utf-8')
-    #print('команда 1 ', a )
     print('команда 2 ', command )
     res=' '
-    '''
-    ip_adress='10.10.10.3'
-    login='admin'
-    password='admin'
-    '''
+
     ip_adress = request.args.get('ip_adress', 0,  type=str)
     login = request.args.get('login', 0, type=str)
     password = request.args.get('password', 0,  type=str)
@@ -91,12 +85,41 @@ def add_numbers():
 
     telnet.write(command + b'\n')
     time.sleep(0.5)
+    time.sleep(0.5)
     print('ввели команду')
     res = telnet .read_very_eager().decode('utf-8')
     print('вывод команды', res)
 
 
     return jsonify(result_command = res)
+
+
+
+
+
+#ВВОД command_run всех команд по кнопкам
+@my_flask_app .route('/command_run')
+def command_run():
+    res_command_run=' '
+
+    command_run= request.args.get('command_run', 0, type=str).encode('utf-8')
+    ip_adress = request.args.get('ip_adress', 0,  type=str)
+    login = request.args.get('login', 0, type=str)
+    password = request.args.get('password', 0,  type=str)
+
+
+    telnet = telnetlib.Telnet(ip_adress)
+
+    telnet.read_until(b"Username:")
+    telnet.write(login.encode('utf-8')+ b'\n')
+    telnet.read_until(b"Password: ")
+    telnet.write(password.encode('utf-8')+ b'\n')
+    time.sleep(0.5)  
+    telnet.write(command_run + b'\n')
+    time.sleep(0.5)
+    res_command_run= telnet .read_very_eager().decode('utf-8')
+    return jsonify(result_command_run = res_command_run)
+
 
 
 
