@@ -113,6 +113,15 @@ def configure_mode():
     ospf_ip_adress_interface = request.args.get('ospf_ip_adress_interface', 0, type=str).encode('utf-8')
     ospf_mask= request.args.get('ospf_mask', 0, type=str).encode('utf-8')
     ospf_area= request.args.get('ospf_area', 0, type=str).encode('utf-8')
+
+
+#начальные данные для конфигурации BGP
+
+    bgp_as_self = request.args.get('bgp_as_self', 0,  type=str).encode('utf-8')
+    bgp_ip_adress_neighbor = request.args.get('bgp_ip_adress_neighbor', 0, type=str).encode('utf-8')  
+    bgp_as_neighbor = request.args.get('bgp_as_neighbor', 0, type=str).encode('utf-8')
+
+
     
     
 #вход на роутер и в  конфигурационный режим
@@ -128,34 +137,40 @@ def configure_mode():
     time.sleep(0.5)
 
 
-
+#создаем интерфейс
     if configure_command=='configure_interface':
         print('создаем интерфейс')
-#создаем интерфейс
         telnet.write(b'interface ' + interface_name  + b'\n')
         time.sleep(0.5)
         telnet.write(b'ip add '  + b' ' + interface_ip_adress + b' ' + interface_mask + b'\n')
         time.sleep(0.5)
 
+#прописываем маршурты
     elif configure_command=='configure_route':
         print('пописываем маршрут')
-
-#прописываем маршурты
         telnet.write(b'ip route ' + network_ip_adress + b' '+ network_mask + b' ' +  next_hop_ip  + b'\n')
         time.sleep(0.5)
 
 
 # запускаем ospf
     elif configure_command=='configure_ospf':
-
         telnet.write(b'router ospf ' + ospf_process_id + b'\n')
         time.sleep(0.5)
         telnet.write(b'network ' + ospf_ip_adress_interface + b' ' + ospf_mask + b' area ' + ospf_area + b'\n')
         time.sleep(0.5)
 
 
+# запускаем BGP
+    elif configure_command=='configure_bgp':
 
+        telnet.write(b'router bgp ' + bgp_as_self+ b'\n')
+        time.sleep(0.5)
+        telnet.write(b'neighbor  ' + bgp_ip_adress_neighbor + b' remote-as ' + bgp_as_neighbor + b'\n')
+        time.sleep(0.5)
 
+  
+
+    
 
     res_configure_mode = telnet .read_very_eager().decode('utf-8')
     return jsonify(result_configure_mode = res_configure_mode)
