@@ -23,7 +23,7 @@
     <meta name="author" content="">
     <!-- <link rel="icon" href="../../favicon.ico"> -->
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Web доступ к оборудованию</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
@@ -54,7 +54,7 @@
         <input type="text"  class="form-control"  placeholder="ip адрес оборудования" name="ip_address">
         <!--<label for="inputPassword" class="sr-only">test2</label>-->
         <input type="text"   class="form-control" placeholder="логин" name="login">
-        <input type="text" class="form-control" placeholder="пароль" name="password">
+        <input type="password" class="form-control" placeholder="пароль" name="password">
      
     <p><a class="btn btn-lg  btn-primary btn-block" href=# id="check_login_ip_password">проверить</a>
 
@@ -63,7 +63,7 @@
 <h1>Введенные IP Login Password </h1>
 
 <!-- ВЫВОД ЛОГИНА ПАРОЛЯ И IP -->
-<p><span id="result_correct_web">тут будет результат</span>
+<p><span id="result_correct_web">результат подключения к оборудованию</span>
 
 
  <!--  СКРИПТЫ -->
@@ -122,26 +122,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-
+            
+     <h4 class="modal-title" id="myModalLabel__diagn">Диагностический блок</h4>
+     </div>
      <div class="modal-body">
-   
 
-      <h1>Ввод команды command_run</h1>
-      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh clo' >Ввод команды sh_clo_web</a>
-      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip int br' h>Ввод команды sh ip int br</a>
-      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip route' >Ввод команды sh ip route</a>
-      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh run' >Ввод команды sh run</a>
-      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh arp' >Ввод команды sh arp</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh clo' >show clock</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip int br' h>show ip interface brief</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip route' >show ip route</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh run' >show running config</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh arp' >sh arp</a>
       <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='ping' >ping</a>
       <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='trace' >trace</a>
       <input type="text"  class="form-control" placeholder="ip адрес для команд ping и trace" name="ip_address_ping_trace">
-      <p>10.10.10.1</p>
-
-
-      <h1>Вывод результата command_run</h1>
-
-      <p><pre class="show_result" id="command_run_web">Вывод результата command_run</pre>
+      <p><pre class="show_result" id="command_run_web">Вывод результата диагностики</pre>
 
 
     
@@ -191,6 +185,9 @@
         interface_mask: $('input[name="interface_mask"]').val(),
         interface_ip_address: $('input[name="interface_ip_address"]').val(),
 
+//конфигурим саб интерфейс
+        interface_vlan: $('input[name="interface_vlan"]').val(),
+
 // прописываем стат маршруты
 
         network_ip_address: $('input[name="network_ip_address"]').val(),
@@ -233,19 +230,19 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel__int">Конфигурация интерфейса</h4>
                   </div>
 
      <div class="modal-body">
-      <p>loopback 0</p>
-      <p>8.8.8.8</p>
-      <p>255.255.255.255</p>
-
-
       <input type="text"  class="form-control" placeholder="Наименование Интерфейса" name="interface_name">
       <input type="text"  class="form-control" placeholder="ip_address Интерфейса" name="interface_ip_address">
       <input type="text"  class="form-control" placeholder="маска" name="interface_mask">
+
+      <h4>Если вы хотите создать sub interface, необхожимо ввести данные в поле ниже</h4>
+
+      <input type="text"  class="form-control" placeholder="vlan" name="interface_vlan"> 
+
       <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_interface' >создать</a>
-      <h1>Вывод результата конфигурации</h1>
       <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
 
 
@@ -271,19 +268,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel__int">Статическая маршрутизация</h4>
                   </div>
 
      <div class="modal-body">
-        
-        <p>20.20.20.0</p>
-        <p>255.255.255.0</p>
-        <p>10.10.10.1</p>
         <input type="text"  class="form-control" placeholder="адрес сети" name="network_ip_address">
         <input type="text"  class="form-control" placeholder="маска" name="network_mask">
         <input type="text"  class="form-control" placeholder="next-hop" name="next_hop_ip">
         <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_route' >прописать маршрут</a>
-      <h1>Вывод результата конфигурации</h1>
-      <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
+        <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
 
 
     
@@ -309,19 +302,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel__ospf">OSPF</h4>
                   </div>
 
      <div class="modal-body">
-        
-        <p>10.10.10.0</p>
-        <p>255.255.255.0</p>
         <input type="text"  class="form-control" placeholder="ospf_process_id" name="ospf_process_id">
         <input type="text"  class="form-control" placeholder="ip_address интерфейса ospf" name="ospf_ip_address_interface">
         <input type="text"  class="form-control" placeholder="маска" name="ospf_mask">
         <input type="text"  class="form-control" placeholder="area" name="ospf_area">
         <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_ospf' >запустить процесс OSPF</a>
-
-      <h1>Вывод результата конфигурации</h1>
       <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
 
 
@@ -348,19 +337,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel__ospf">BGP</h4>
                   </div>
+              
 
      <div class="modal-body">
-        
-
-        <p>10.10.10.1</p>
-        1  2
         <input type="text"  class="form-control" placeholder="bgp_as нашего роутера" name="bgp_as_self">
         <input type="text"  class="form-control" placeholder="ip_address neighbor" name="bgp_ip_address_neighbor">
         <input type="text"  class="form-control" placeholder="AS neighbor" name="bgp_as_neighbor">
         <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_bgp' >запустить процесс BGP</a>
-
-      <h1>Вывод результата конфигурации</h1>
       <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
 
 
