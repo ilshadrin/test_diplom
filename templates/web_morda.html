@@ -157,64 +157,6 @@
 <h1>Режим конфигурирования </h1>
 
 
-<script type=text/javascript>
-  $(function() {
-    $('.router-configure').bind('click', function() {
-      console.log($(this).attr('configure_command'));
-      $.getJSON($SCRIPT_ROOT + '/configure_mode', {
-
-
-// пароль, логин IP для дсотупа к оборудованию
-
-        ip_address: $('input[name="ip_address"]').val(),
-        login: $('input[name="login"]').val(),
-        password: $('input[name="password"]').val(),
-
-// определяем что будет конфигурить
-
-        configure_command: $(this).attr('configure_command'),
-
-
-// для диагностики
-
-        ip_address_ping_trace: $('input[name="ip_address_ping_trace"]').val(),
-
-// конфигурим интерфейс
-
-        interface_name: $('input[name="interface_name"]').val(),
-        interface_mask: $('input[name="interface_mask"]').val(),
-        interface_ip_address: $('input[name="interface_ip_address"]').val(),
-
-//конфигурим саб интерфейс
-        interface_vlan: $('input[name="interface_vlan"]').val(),
-
-// прописываем стат маршруты
-
-        network_ip_address: $('input[name="network_ip_address"]').val(),
-        network_mask: $('input[name="network_mask"]').val(),
-        next_hop_ip: $('input[name="next_hop_ip"]').val(),
-
-// запускаем ospf
-
-        ospf_process_id: $('input[name="ospf_process_id"]').val(),
-        ospf_ip_address_interface: $('input[name="ospf_ip_address_interface"]').val(),
-        ospf_mask: $('input[name="ospf_mask"]').val(),
-        ospf_area: $('input[name="ospf_area"]').val(),
-
-// запускаем BGP
-
-        bgp_as_self: $('input[name="bgp_as_self"]').val(),
-        bgp_ip_address_neighbor: $('input[name="bgp_ip_address_neighbor"]').val(),
-        bgp_as_neighbor: $('input[name="bgp_as_neighbor"]').val(),
-
-
-      }, function(data) {
-        $("#result_configure_mode_web").text(data.result_configure_mode);
-      });
-      return false;
-    });
-  });
-</script>
 
 
 
@@ -238,9 +180,9 @@
       <input type="text"  class="form-control" placeholder="ip_address Интерфейса" name="interface_ip_address">
       <input type="text"  class="form-control" placeholder="маска" name="interface_mask">
 
-      <h4>Если вы хотите создать sub interface, необхожимо ввести данные в поле ниже</h4>
-
-      <input type="text"  class="form-control" placeholder="vlan" name="interface_vlan"> 
+      <input type="checkbox"  name="interface_vlan_2" id="interface_vlan_2"> 
+      <label for="interface_vlan_2"> Если вы хотите создать sub interface нажмите галочку</label>
+      <input disabled="disabled" type="text"  class="form-control" placeholder="vlan" id="interface_vlan" name="interface_vlan"> 
 
       <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_interface' >создать</a>
       <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
@@ -361,6 +303,74 @@
 
 <!-- активация скриптов в bootstrap -->
 
+
+<script type=text/javascript>
+  $(function() {
+
+    $('#interface_vlan_2').change( function() {
+      if(this.checked) { 
+        $("#interface_vlan").prop('disabled', false);
+
+      }
+      else {$("#interface_vlan").prop('disabled', true);
+      }
+    });
+    $('.router-configure').bind('click', function() {
+      console.log($(this).attr('configure_command'));
+      $.getJSON($SCRIPT_ROOT + '/configure_mode', {
+
+
+// пароль, логин IP для дсотупа к оборудованию
+
+        ip_address: $('input[name="ip_address"]').val(),
+        login: $('input[name="login"]').val(),
+        password: $('input[name="password"]').val(),
+
+// определяем что будет конфигурить
+
+        configure_command: $(this).attr('configure_command'),
+
+
+// для диагностики
+
+        ip_address_ping_trace: $('input[name="ip_address_ping_trace"]').val(),
+
+// конфигурим интерфейс
+
+        interface_name: $('input[name="interface_name"]').val(),
+        interface_mask: $('input[name="interface_mask"]').val(),
+        interface_ip_address: $('input[name="interface_ip_address"]').val(),
+
+//конфигурим саб интерфейс
+        interface_vlan: $('input[name="interface_vlan"]').val(),
+
+// прописываем стат маршруты
+
+        network_ip_address: $('input[name="network_ip_address"]').val(),
+        network_mask: $('input[name="network_mask"]').val(),
+        next_hop_ip: $('input[name="next_hop_ip"]').val(),
+
+// запускаем ospf
+
+        ospf_process_id: $('input[name="ospf_process_id"]').val(),
+        ospf_ip_address_interface: $('input[name="ospf_ip_address_interface"]').val(),
+        ospf_mask: $('input[name="ospf_mask"]').val(),
+        ospf_area: $('input[name="ospf_area"]').val(),
+
+// запускаем BGP
+
+        bgp_as_self: $('input[name="bgp_as_self"]').val(),
+        bgp_ip_address_neighbor: $('input[name="bgp_ip_address_neighbor"]').val(),
+        bgp_as_neighbor: $('input[name="bgp_as_neighbor"]').val(),
+
+
+      }, function(data) {
+        $("#result_configure_mode_web").text(data.result_configure_mode);
+      });
+      return false;
+    });
+  });
+</script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
