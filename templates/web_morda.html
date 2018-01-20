@@ -51,7 +51,7 @@
 
 
    <h2 class="form-signin-heading">Пожалуйста введите ip адрес оборудования, логин, пароль</h2>
-        <input type="text"  class="form-control"  placeholder="ip адрес оборудования" name="ip_adress">
+        <input type="text"  class="form-control"  placeholder="ip адрес оборудования" name="ip_address">
         <!--<label for="inputPassword" class="sr-only">test2</label>-->
         <input type="text"   class="form-control" placeholder="логин" name="login">
         <input type="text" class="form-control" placeholder="пароль" name="password">
@@ -74,7 +74,7 @@
   $(function() {
     $('a#check_login_ip_password').bind('click', function() {
       $.getJSON($SCRIPT_ROOT + '/correct', {
-        ip_adress: $('input[name="ip_adress"]').val(),
+        ip_address: $('input[name="ip_address"]').val(),
         login: $('input[name="login"]').val(),
         password: $('input[name="password"]').val(),
       
@@ -95,10 +95,10 @@
       console.log($(this).attr('data-command'));
       $.getJSON($SCRIPT_ROOT + '/command_run', {
         command_run: $(this).attr('data-command'),
-        ip_adress: $('input[name="ip_adress"]').val(),
+        ip_address: $('input[name="ip_address"]').val(),
         login: $('input[name="login"]').val(),
         password: $('input[name="password"]').val(),
-        ip_adress_ping_trace: $('input[name="ip_adress_ping_trace"]').val(),
+        ip_address_ping_trace: $('input[name="ip_address_ping_trace"]').val(),
       
       }, function(data) {
         $("#command_run_web").text(data.result_command_run);
@@ -135,7 +135,7 @@
       <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh arp' >Ввод команды sh arp</a>
       <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='ping' >ping</a>
       <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='trace' >trace</a>
-      <input type="text"  class="form-control" placeholder="ip адрес для команд ping и trace" name="ip_adress_ping_trace">
+      <input type="text"  class="form-control" placeholder="ip адрес для команд ping и trace" name="ip_address_ping_trace">
       <p>10.10.10.1</p>
 
 
@@ -172,7 +172,7 @@
 
 // пароль, логин IP для дсотупа к оборудованию
 
-        ip_adress: $('input[name="ip_adress"]').val(),
+        ip_address: $('input[name="ip_address"]').val(),
         login: $('input[name="login"]').val(),
         password: $('input[name="password"]').val(),
 
@@ -183,31 +183,31 @@
 
 // для диагностики
 
-        ip_adress_ping_trace: $('input[name="ip_adress_ping_trace"]').val(),
+        ip_address_ping_trace: $('input[name="ip_address_ping_trace"]').val(),
 
 // конфигурим интерфейс
 
         interface_name: $('input[name="interface_name"]').val(),
         interface_mask: $('input[name="interface_mask"]').val(),
-        interface_ip_adress: $('input[name="interface_ip_adress"]').val(),
+        interface_ip_address: $('input[name="interface_ip_address"]').val(),
 
 // прописываем стат маршруты
 
-        network_ip_adress: $('input[name="network_ip_adress"]').val(),
+        network_ip_address: $('input[name="network_ip_address"]').val(),
         network_mask: $('input[name="network_mask"]').val(),
         next_hop_ip: $('input[name="next_hop_ip"]').val(),
 
 // запускаем ospf
 
         ospf_process_id: $('input[name="ospf_process_id"]').val(),
-        ospf_ip_adress_interface: $('input[name="ospf_ip_adress_interface"]').val(),
+        ospf_ip_address_interface: $('input[name="ospf_ip_address_interface"]').val(),
         ospf_mask: $('input[name="ospf_mask"]').val(),
         ospf_area: $('input[name="ospf_area"]').val(),
 
 // запускаем BGP
 
         bgp_as_self: $('input[name="bgp_as_self"]').val(),
-        bgp_ip_adress_neighbor: $('input[name="bgp_ip_adress_neighbor"]').val(),
+        bgp_ip_address_neighbor: $('input[name="bgp_ip_address_neighbor"]').val(),
         bgp_as_neighbor: $('input[name="bgp_as_neighbor"]').val(),
 
 
@@ -242,7 +242,7 @@
 
 
       <input type="text"  class="form-control" placeholder="Наименование Интерфейса" name="interface_name">
-      <input type="text"  class="form-control" placeholder="ip_adress Интерфейса" name="interface_ip_adress">
+      <input type="text"  class="form-control" placeholder="ip_address Интерфейса" name="interface_ip_address">
       <input type="text"  class="form-control" placeholder="маска" name="interface_mask">
       <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_interface' >создать</a>
       <h1>Вывод результата конфигурации</h1>
@@ -278,7 +278,7 @@
         <p>20.20.20.0</p>
         <p>255.255.255.0</p>
         <p>10.10.10.1</p>
-        <input type="text"  class="form-control" placeholder="адрес сети" name="network_ip_adress">
+        <input type="text"  class="form-control" placeholder="адрес сети" name="network_ip_address">
         <input type="text"  class="form-control" placeholder="маска" name="network_mask">
         <input type="text"  class="form-control" placeholder="next-hop" name="next_hop_ip">
         <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_route' >прописать маршрут</a>
@@ -316,7 +316,7 @@
         <p>10.10.10.0</p>
         <p>255.255.255.0</p>
         <input type="text"  class="form-control" placeholder="ospf_process_id" name="ospf_process_id">
-        <input type="text"  class="form-control" placeholder="ip_adress интерфейса ospf" name="ospf_ip_adress_interface">
+        <input type="text"  class="form-control" placeholder="ip_address интерфейса ospf" name="ospf_ip_address_interface">
         <input type="text"  class="form-control" placeholder="маска" name="ospf_mask">
         <input type="text"  class="form-control" placeholder="area" name="ospf_area">
         <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_ospf' >запустить процесс OSPF</a>
@@ -356,7 +356,7 @@
         <p>10.10.10.1</p>
         1  2
         <input type="text"  class="form-control" placeholder="bgp_as нашего роутера" name="bgp_as_self">
-        <input type="text"  class="form-control" placeholder="ip_adress neighbor" name="bgp_ip_adress_neighbor">
+        <input type="text"  class="form-control" placeholder="ip_address neighbor" name="bgp_ip_address_neighbor">
         <input type="text"  class="form-control" placeholder="AS neighbor" name="bgp_as_neighbor">
         <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_bgp' >запустить процесс BGP</a>
 
