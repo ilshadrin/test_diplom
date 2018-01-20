@@ -101,6 +101,9 @@ def configure_mode():
     interface_ip_adress = request.args.get('interface_ip_adress', 0, type=str).encode('utf-8')
     interface_mask = request.args.get('interface_mask', 0, type=str).encode('utf-8')
 
+#начальные данные для конфигурации саб интерфейса
+    interface_vlan = request.args.get('interface_vlan', 0, type=str).encode('utf-8')
+
 #начальные данные для конфигурации маршрутов
     network_ip_adress= request.args.get('network_ip_adress', 0,  type=str).encode('utf-8')
     network_mask = request.args.get('network_mask', 0, type=str).encode('utf-8')

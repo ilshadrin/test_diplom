@@ -1,0 +1,376 @@
+    
+<!DOCTYPE html>
+<html lang="en"> 
+
+ <!--  строим ajax -->
+
+
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+{% block body %}{% endblock %}
+
+<!--  строим ajax -->
+
+ <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../favicon.ico"> -->
+
+    <title>Web доступ к оборудованию</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/main_2.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="/static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/static/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+
+
+   <h2 class="form-signin-heading">Пожалуйста введите ip адрес оборудования, логин, пароль</h2>
+        <input type="text"  class="form-control"  placeholder="ip адрес оборудования" name="ip_address">
+        <!--<label for="inputPassword" class="sr-only">test2</label>-->
+        <input type="text"   class="form-control" placeholder="логин" name="login">
+        <input type="password" class="form-control" placeholder="пароль" name="password">
+     
+    <p><a class="btn btn-lg  btn-primary btn-block" href=# id="check_login_ip_password">проверить</a>
+
+
+
+<h1>Введенные IP Login Password </h1>
+
+<!-- ВЫВОД ЛОГИНА ПАРОЛЯ И IP -->
+<p><span id="result_correct_web">результат подключения к оборудованию</span>
+
+
+ <!--  СКРИПТЫ -->
+
+
+ <!--  проверяем корректность логина и пароля -->
+<script type=text/javascript>
+  $(function() {
+    $('a#check_login_ip_password').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/correct', {
+        ip_address: $('input[name="ip_address"]').val(),
+        login: $('input[name="login"]').val(),
+        password: $('input[name="password"]').val(),
+      
+      }, function(data) {
+        $("#result_correct_web").text(data.result_correct);
+      });
+      return false;
+    });
+  });
+</script>
+
+
+<!-- command_run-->
+
+<script type=text/javascript>
+  $(function() {
+    $('.router-command').bind('click', function() {
+      console.log($(this).attr('data-command'));
+      $.getJSON($SCRIPT_ROOT + '/command_run', {
+        command_run: $(this).attr('data-command'),
+        ip_address: $('input[name="ip_address"]').val(),
+        login: $('input[name="login"]').val(),
+        password: $('input[name="password"]').val(),
+        ip_address_ping_trace: $('input[name="ip_address_ping_trace"]').val(),
+      
+      }, function(data) {
+        $("#command_run_web").text(data.result_command_run);
+      });
+      return false;
+    });
+  });
+</script>
+
+
+
+<!-- Button trigger modal  Диагностический блок -->
+<div class="bs-example bs-example-padded-bottom"> 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal__diagn"> 
+    Диагностический блок
+</button> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal__diagn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel__diagn">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            
+     <h4 class="modal-title" id="myModalLabel__diagn">Диагностический блок</h4>
+     </div>
+     <div class="modal-body">
+
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh clo' >show clock</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip int br' h>show ip interface brief</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh ip route' >show ip route</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh run' >show running config</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='sh arp' >sh arp</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='ping' >ping</a>
+      <p><a class="btn btn-lg  btn-primary btn-block router-command" data-command='trace' >trace</a>
+      <input type="text"  class="form-control" placeholder="ip адрес для команд ping и trace" name="ip_address_ping_trace">
+      <p><pre class="show_result" id="command_run_web">Вывод результата диагностики</pre>
+
+
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<h1>Режим конфигурирования </h1>
+
+
+<script type=text/javascript>
+  $(function() {
+    $('.router-configure').bind('click', function() {
+      console.log($(this).attr('configure_command'));
+      $.getJSON($SCRIPT_ROOT + '/configure_mode', {
+
+
+// пароль, логин IP для дсотупа к оборудованию
+
+        ip_address: $('input[name="ip_address"]').val(),
+        login: $('input[name="login"]').val(),
+        password: $('input[name="password"]').val(),
+
+// определяем что будет конфигурить
+
+        configure_command: $(this).attr('configure_command'),
+
+
+// для диагностики
+
+        ip_address_ping_trace: $('input[name="ip_address_ping_trace"]').val(),
+
+// конфигурим интерфейс
+
+        interface_name: $('input[name="interface_name"]').val(),
+        interface_mask: $('input[name="interface_mask"]').val(),
+        interface_ip_address: $('input[name="interface_ip_address"]').val(),
+
+//конфигурим саб интерфейс
+        interface_vlan: $('input[name="interface_vlan"]').val(),
+
+// прописываем стат маршруты
+
+        network_ip_address: $('input[name="network_ip_address"]').val(),
+        network_mask: $('input[name="network_mask"]').val(),
+        next_hop_ip: $('input[name="next_hop_ip"]').val(),
+
+// запускаем ospf
+
+        ospf_process_id: $('input[name="ospf_process_id"]').val(),
+        ospf_ip_address_interface: $('input[name="ospf_ip_address_interface"]').val(),
+        ospf_mask: $('input[name="ospf_mask"]').val(),
+        ospf_area: $('input[name="ospf_area"]').val(),
+
+// запускаем BGP
+
+        bgp_as_self: $('input[name="bgp_as_self"]').val(),
+        bgp_ip_address_neighbor: $('input[name="bgp_ip_address_neighbor"]').val(),
+        bgp_as_neighbor: $('input[name="bgp_as_neighbor"]').val(),
+
+
+      }, function(data) {
+        $("#result_configure_mode_web").text(data.result_configure_mode);
+      });
+      return false;
+    });
+  });
+</script>
+
+
+
+<!-- Button trigger modal -->
+<div class="bs-example bs-example-padded-bottom"> 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal__int"> 
+    Интерфейс
+</button> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal__int" tabindex="-1" role="dialog" aria-labelledby="myModalLabel__int">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel__int">Конфигурация интерфейса</h4>
+                  </div>
+
+     <div class="modal-body">
+      <input type="text"  class="form-control" placeholder="Наименование Интерфейса" name="interface_name">
+      <input type="text"  class="form-control" placeholder="ip_address Интерфейса" name="interface_ip_address">
+      <input type="text"  class="form-control" placeholder="маска" name="interface_mask">
+
+      <h4>Если вы хотите создать sub interface, необхожимо ввести данные в поле ниже</h4>
+
+      <input type="text"  class="form-control" placeholder="vlan" name="interface_vlan"> 
+
+      <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_interface' >создать</a>
+      <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
+
+
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Button trigger modal -->
+<div class="bs-example bs-example-padded-bottom"> 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal__stat"> 
+    Статическая маршрутизация
+</button> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal__stat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel__stat">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel__int">Статическая маршрутизация</h4>
+                  </div>
+
+     <div class="modal-body">
+        <input type="text"  class="form-control" placeholder="адрес сети" name="network_ip_address">
+        <input type="text"  class="form-control" placeholder="маска" name="network_mask">
+        <input type="text"  class="form-control" placeholder="next-hop" name="next_hop_ip">
+        <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_route' >прописать маршрут</a>
+        <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
+
+
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Button trigger modal -->
+<div class="bs-example bs-example-padded-bottom"> 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal__ospf"> 
+    OSPF
+</button> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal__ospf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel__ospf">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel__ospf">OSPF</h4>
+                  </div>
+
+     <div class="modal-body">
+        <input type="text"  class="form-control" placeholder="ospf_process_id" name="ospf_process_id">
+        <input type="text"  class="form-control" placeholder="ip_address интерфейса ospf" name="ospf_ip_address_interface">
+        <input type="text"  class="form-control" placeholder="маска" name="ospf_mask">
+        <input type="text"  class="form-control" placeholder="area" name="ospf_area">
+        <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_ospf' >запустить процесс OSPF</a>
+      <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
+
+
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Button trigger modal -->
+<div class="bs-example bs-example-padded-bottom"> 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal__bgp"> 
+    BGP
+</button> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal__bgp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel__bgp">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel__ospf">BGP</h4>
+                  </div>
+              
+
+     <div class="modal-body">
+        <input type="text"  class="form-control" placeholder="bgp_as нашего роутера" name="bgp_as_self">
+        <input type="text"  class="form-control" placeholder="ip_address neighbor" name="bgp_ip_address_neighbor">
+        <input type="text"  class="form-control" placeholder="AS neighbor" name="bgp_as_neighbor">
+        <p><a class="btn btn-lg  btn-primary btn-block router-configure" configure_command='configure_bgp' >запустить процесс BGP</a>
+      <p><pre class="show_result" id="result_configure_mode_web">Вывод сделанной конфиги</pre>
+
+
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- активация скриптов в bootstrap -->
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+
+  </body>
+</html>
+
+
+
+
+
