@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from netmiko import ConnectHandler
 
-#для телнета
 import getpass
-import telnetlib
 import time
 
 
@@ -53,13 +51,10 @@ def command_run():
 
     if request.args.get('command_run', 0, type=str) in ('ping', 'trace'):
         print('я тут')
-        ###print(command_run  +  ' + ip_address_ping_trace + 
         command_to_push = command_run  +  ' + ip_address_ping_trace +  '
         print(command_to_push)
         res_command_run = net_connect.send_command(command_to_push) 
-        ##telnet.write(command_run  +  ' + ip_address_ping_trace + 
-        ##time.sleep(0.5)
-
+        
 #обработка остальных команд
 
     else:
@@ -77,20 +72,18 @@ def configure_mode():
 
 
 #получение исходных данных
-
-
     configure_command = request.args.get('configure_command', 0,  type=str)
-
-    print('НАИМЕНОВАНИЕ КОМАНДЫ!!!!!!!!!', configure_command)
-
+  
     ip_address = request.args.get('ip_address', 0,  type=str)
     login = request.args.get('login', 0, type=str)
     password = request.args.get('password', 0,  type=str)
 
-#начальные данные для конфигурации интерфейса
+    #начальные данные для конфигурации интерфейса
     interface_name= request.args.get('interface_name', 0,  type=str)
     interface_ip_address = request.args.get('interface_ip_address', 0, type=str)
     interface_mask = request.args.get('interface_mask', 0, type=str)
+   
+
 
 #начальные данные для конфигурации маршрутов
     network_ip_address= request.args.get('network_ip_address', 0,  type=str)
@@ -113,39 +106,41 @@ def configure_mode():
     bgp_as_neighbor = request.args.get('bgp_as_neighbor', 0, type=str)
 
 
-    
-    
-#вход на роутер и в  конфигурационный режим
-
-
-
-
-#создаем интерфейс
-   # if configure_command=='configure_interface':
+#устанавливаем соединение:
+    net_connect = ConnectHandler(device_type='cisco_ios', ip=ip_address, username=login, password=password)
+#создаем интерфейс:
+    if configure_command=='configure_interface':
+        command1 = 'interface ' + interface_name
+        command2 = 'ip address ' + interface_ip_address + ' ' + interface_mask
+        command3 = 'no shutdown'
+        command4 = 'do show run ' + interface_name
+        command5 = 'do show ' + interface_name 
+        res_configure_mode = net_connect.send_config_set([command1, command2, command3, command4, command5])
         
-#прописываем маршурты
-    # elif configure_command=='configure_route':
-        
+#прописываем статические маршурты:
+    elif configure_command=='configure_route':
+        command_to_push = 'ip route ' + network_ip_address + ' ' + network_mask + ' ' + next_hop_ip
+        res_configure_mode = net_connect.send_command(command_to_push)
+
 
 # запускаем ospf
-  #  elif configure_command=='configure_ospf':
-        
+    elif configure_command=='configure_ospf':
+        command1 = 'router ospf '+ ospf_process_id
+        command2 = 'network ' + ospf_ip_address_interface + ' ' + ospf_mask + ' area ' + ospf_area
+        command3 = 'do show run | in ospf' 
+        res_configure_mode = net_connect.send_config_set([command1, command2, command3])
 
 
 # запускаем BGP
-   # elif configure_command=='configure_bgp':
-
+    elif configure_command=='configure_bgp':
+        command1 = 'router bgp ' + bgp_as_self
+        command2 = 'neighbor ' + bgp_ip_address_neighbor+ ' remote-as ' + bgp_as_neighbor
+        command3 = 'do show run | in bgp '
+        res_configure_mode = net_connect.send_config_set([command1, command2])
+    return jsonify(result_command_run = res_configure_mode)
+     ###Рвем сессию:
+    net_connect.disconnect()
     
-  
-
-    
-
-#    res_configure_mode = telnet .read_very_eager().decode('utf-8')
- #   return jsonify(result_configure_mode = res_configure_mode)
-
-
-    
-  
     
     
     
